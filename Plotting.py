@@ -3,6 +3,58 @@ import numpy as np
 import matplotlib.pyplot as plt 
 # import scipy.stats as st
 
+def print_terminal_dist_moments_table(
+        paths,
+        S_0,
+        interest_rate,
+        vol,
+        terminal_time,
+        decimals=4,
+):
+    from IPython.display import Markdown, display
+
+    theoretical_mean = S_0 * np.exp(interest_rate * terminal_time)
+    theoretical_variance = (
+        S_0**2
+        * np.exp(2 * interest_rate * terminal_time)
+        * np.expm1(vol**2 * terminal_time)
+    )
+
+    rows = {
+        "Theoretical GBM": (
+            theoretical_mean,
+            theoretical_variance,
+            np.sqrt(theoretical_variance),
+        )
+    }
+
+    samples = {
+        "Exact GBM sample": paths["euler"]["S_exact"][:, -1],
+        "Euler": paths["euler"]["S_approx"][:, -1],
+        "Milstein": paths["milstein"]["S_approx"][:, -1],
+    }
+
+    for name, values in samples.items():
+        rows[name] = (
+            np.mean(values),
+            np.var(values, ddof=1),
+            np.std(values, ddof=1),
+        )
+
+    table = (
+        "| Method | Mean | Variance | Standard deviation |\n"
+        "|:---|---:|---:|---:|\n"
+    )
+
+    for name, (mean, variance, std) in rows.items():
+        table += (
+            f"| {name} "
+            f"| {mean:.{decimals}f} "
+            f"| {variance:.{decimals}f} "
+            f"| {std:.{decimals}f} |\n"
+        )
+
+    display(Markdown(table))
 
 def plot_gbm_simulation(
         paths,

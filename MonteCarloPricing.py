@@ -5,33 +5,34 @@ import scipy.stats as st
 
 
 def generate_GBM_paths(
-        paths_no,
-        step_no,
-        terminal_time,
-        interest_rate,
-        vol,
-        S_0,
+        N,      # number of paths
+        M,      # number of time steps
+        T,      # maturity
+        r,      # interest rate
+        sigma,  # volatility
+        S_0,    # initial stock value
         scheme="euler",
         moment_matching=False,
+
 ):
     if scheme not in ("euler", "milstein"):
         raise ValueError("scheme must be 'euler' or 'milstein'")
 
-    if moment_matching and paths_no < 2:
+    if moment_matching and N < 2:
         raise ValueError("Moment matching requires at least two paths.")
 
-    dt = terminal_time / step_no
-    time = np.linspace(0.0, terminal_time, step_no + 1)
+    dt = T / M
+    time = np.linspace(0.0, T, M + 1)
 
-    Z = np.random.normal(size=(paths_no, step_no))
+    Z = np.random.normal(size=(N, M))
 
-    S_approx = np.zeros((paths_no, step_no + 1))
-    S_exact = np.zeros((paths_no, step_no + 1))
+    S_approx = np.zeros((N, M + 1))
+    S_exact = np.zeros((N, M + 1))
 
     S_approx[:, 0] = S_0
     S_exact[:, 0] = S_0
 
-    for i in range(step_no):
+    for i in range(M):
         z = Z[:, i]
 
         if moment_matching:
@@ -43,18 +44,18 @@ def generate_GBM_paths(
         # Euler update, also the base of the Milstein update.
         S_approx[:, i + 1] = (
             S_current
-            + interest_rate * S_current * dt
-            + vol * S_current * dW
+            + r * S_current * dt
+            + sigma * S_current * dW
         )
 
         if scheme == "milstein":
             S_approx[:, i + 1] += (
-                0.5 * vol**2 * S_current * (dW**2 - dt)
+                0.5 * sigma**2 * S_current * (dW**2 - dt)
             )
 
         # Coupled exact-form update.
         S_exact[:, i + 1] = S_exact[:, i] * np.exp(
-            (interest_rate - 0.5 * vol**2) * dt + vol * dW
+            (r - 0.5 * sigma**2) * dt + sigma * dW
         )
 
     return {
@@ -66,33 +67,33 @@ def generate_GBM_paths(
     }
 
 # def generate_GBM_paths_euler(
-#         paths_no,
-#         step_no,
-#         terminal_time,
-#         interest_rate,
-#         vol,
+#         N,
+#         M,
+#         T,
+#         r,
+#         sigma,
 #         S_0,
 #         moment_matching=False
 # ):
 #     # random innovations 
-#     Z = np.random.normal(0.0,1.0,[paths_no, step_no])
+#     Z = np.random.normal(0.0,1.0,[N, M])
 
 #     # Wiener process
-#     W = np.zeros([paths_no,step_no+1])
+#     W = np.zeros([N,M+1])
 
 #     # Monte Carlo euler process
-#     S_euler_approx = np.zeros([paths_no,step_no+1])
+#     S_euler_approx = np.zeros([N,M+1])
 #     S_euler_approx[:,0] = S_0
 
 #     # exact process
-#     S_exact = np.zeros([paths_no,step_no+1])
+#     S_exact = np.zeros([N,M+1])
 #     S_exact[:,0] = S_0
 
-#     time = np.zeros([step_no+1])
-#     dt = terminal_time / step_no
+#     time = np.zeros([M+1])
+#     dt = T / M
 
-#     for i in range(step_no):
-#         if moment_matching and paths_no > 1:
+#     for i in range(M):
+#         if moment_matching and N > 1:
 #             Z[:, i] = (
 #                 (Z[:, i] - np.mean(Z[:, i])) / np.std(Z[:, i])
 #             )
@@ -101,8 +102,8 @@ def generate_GBM_paths(
 #         W[:,i+1] = W[:,i] + np.sqrt(dt) * Z[:,i]
 
 #         # update monte carlo euler process and exact process
-#         S_euler_approx[:,i+1] = S_euler_approx[:,i] + interest_rate * S_euler_approx[:,i] * dt + vol * S_euler_approx[:,i] * (W[:,i+1]-W[:,i])
-#         S_exact[:,i+1] = S_exact[:,i] * np.exp((interest_rate-0.5*vol**2)*dt + vol*(W[:,i+1]-W[:,i]))
+#         S_euler_approx[:,i+1] = S_euler_approx[:,i] + r * S_euler_approx[:,i] * dt + sigma * S_euler_approx[:,i] * (W[:,i+1]-W[:,i])
+#         S_exact[:,i+1] = S_exact[:,i] * np.exp((r-0.5*sigma**2)*dt + sigma*(W[:,i+1]-W[:,i]))
 
 #         # update time
 #         time[i+1] = time[i] + dt 
@@ -112,33 +113,33 @@ def generate_GBM_paths(
 #     return paths
 
 # def generate_GBM_paths_milstein(
-#         paths_no,
-#         step_no,
-#         terminal_time,
-#         interest_rate,
-#         vol,
+#         N,
+#         M,
+#         T,
+#         r,
+#         sigma,
 #         S_0,
 #         moment_matching=False
 # ):
 #     # random innovations 
-#     Z = np.random.normal(0.0,1.0,[paths_no, step_no])
+#     Z = np.random.normal(0.0,1.0,[N, M])
 
 #     # Wiener process
-#     W = np.zeros([paths_no,step_no+1])
+#     W = np.zeros([N,M+1])
 
 #     # Monte Carlo euler process
-#     S_milstein_approx = np.zeros([paths_no,step_no+1])
+#     S_milstein_approx = np.zeros([N,M+1])
 #     S_milstein_approx[:,0] = S_0
 
 #     # exact process
-#     S_exact = np.zeros([paths_no,step_no+1])
+#     S_exact = np.zeros([N,M+1])
 #     S_exact[:,0] = S_0
 
-#     time = np.zeros([step_no+1])
-#     dt = terminal_time / step_no
+#     time = np.zeros([M+1])
+#     dt = T / M
 
-#     for i in range(step_no):
-#         if moment_matching and paths_no > 1:
+#     for i in range(M):
+#         if moment_matching and N > 1:
 #             Z[:, i] = (
 #                 (Z[:, i] - np.mean(Z[:, i])) / np.std(Z[:, i])
 #             )
@@ -147,9 +148,9 @@ def generate_GBM_paths(
 #         W[:,i+1] = W[:,i] + np.sqrt(dt) * Z[:,i]
 
 #         # update monte carlo euler process and exact process
-#         S_milstein_approx[:,i+1] = S_milstein_approx[:,i] + interest_rate * S_milstein_approx[:,i] * dt + vol * S_milstein_approx[:,i] * (W[:,i+1]-W[:,i]) + 0.5 * vol**2 * S_milstein_approx[:,i] * (np.power((W[:,i+1] -
+#         S_milstein_approx[:,i+1] = S_milstein_approx[:,i] + r * S_milstein_approx[:,i] * dt + sigma * S_milstein_approx[:,i] * (W[:,i+1]-W[:,i]) + 0.5 * sigma**2 * S_milstein_approx[:,i] * (np.power((W[:,i+1] -
 # W[:,i]),2) - dt)
-#         S_exact[:,i+1] = S_exact[:,i] * np.exp((interest_rate-0.5*vol**2)*dt + vol*(W[:,i+1]-W[:,i]))
+#         S_exact[:,i+1] = S_exact[:,i] * np.exp((r-0.5*sigma**2)*dt + sigma*(W[:,i+1]-W[:,i]))
 
 #         # update time
 #         time[i+1] = time[i] + dt 
@@ -162,40 +163,40 @@ def analytical_BS_call_put_price(
         option_type,
         S_0,
         K,
+        T,
+        r,
         sigma,
-        tau,
-        r
 ):
 
     # K = np.array(K).reshape([len(K),1])
     d1 = (np.log(S_0 / K) + (r + 0.5 * np.power(sigma,2.0))
-    * tau) / float(sigma * np.sqrt(tau))
-    d2 = d1 - sigma * np.sqrt(tau)
+    * T) / float(sigma * np.sqrt(T))
+    d2 = d1 - sigma * np.sqrt(T)
     if option_type == "call":
-        value = st.norm.cdf(d1) * S_0 - st.norm.cdf(d2) * K * np.exp(-r * tau)
+        value = st.norm.cdf(d1) * S_0 - st.norm.cdf(d2) * K * np.exp(-r * T)
     elif option_type == "put":
-        value = st.norm.cdf(-d2) * K * np.exp(-r * tau) - st.norm.cdf(-d1)*S_0
+        value = st.norm.cdf(-d2) * K * np.exp(-r * T) - st.norm.cdf(-d1)*S_0
     else:
         raise ValueError("option_type must be 'call' or 'put'")
     return value
 
 def mc_call_put_price(
         option_type,
-        S,
+        S_T,
         K,
         T,
         r
 ):
     if option_type == "call":
-        payoff = np.maximum(S - K, 0.0)
+        payoff = np.maximum(S_T - K, 0.0)
     elif option_type == "put":
-        payoff = np.maximum(K - S, 0.0)
+        payoff = np.maximum(K - S_T, 0.0)
     else:
         raise ValueError("option_type must be 'call' or 'put'")
 
     discounted_payoff = np.exp(-r * T) * payoff
 
-    N = S.size
+    N = S_T.size
     price = np.mean(discounted_payoff)
     payoff_variance = np.var(discounted_payoff, ddof=1)
     standard_error = np.sqrt(payoff_variance / N)
@@ -209,11 +210,11 @@ def mc_call_put_price(
     }
 
 def weak_and_strong_convergence(
-        paths_no,
+        N,
         step_counts,
-        terminal_time,
-        interest_rate,
-        vol,
+        T,
+        r,
+        sigma,
         S_0,
         scheme="euler",
         moment_matching=False
@@ -227,13 +228,13 @@ def weak_and_strong_convergence(
     # else:
     #     raise ValueError("scheme must be 'euler' or 'milstein'")
 
-    dt_values = terminal_time / np.asarray(step_counts, dtype=float)
+    dt_values = T / np.asarray(step_counts, dtype=float)
     error_weak = np.zeros(len(step_counts))
     error_strong = np.zeros(len(step_counts))
 
-    for k, step_no in enumerate(step_counts):
+    for k, M in enumerate(step_counts):
         paths = generate_GBM_paths(
-            paths_no, int(step_no), terminal_time, interest_rate, vol, S_0, scheme, moment_matching 
+            N, int(M), T, r, sigma, S_0, scheme, moment_matching 
         )
 
         S_approx_last = paths["S_approx"][:, -1]
@@ -253,7 +254,7 @@ def weak_and_strong_convergence(
 
 def mc_convergence(
         path_counts,
-        step_no,
+        M,
         option_type,
         S_0,
         K,
@@ -263,7 +264,7 @@ def mc_convergence(
         seed,
 ):
     bs_price = analytical_BS_call_put_price(
-        option_type, S_0, K, sigma, T, r
+        option_type, S_0, K, T, r, sigma
     )
 
     results = []
@@ -272,18 +273,18 @@ def mc_convergence(
         # Same innovations for Euler and Milstein.
         np.random.seed(seed)
         paths_euler = generate_GBM_paths(
-            N, step_no, T, r, sigma, S_0, scheme="euler"
+            N, M, T, r, sigma, S_0, scheme="euler"
         )
 
         np.random.seed(seed)
         paths_milstein = generate_GBM_paths(
-            N, step_no, T, r, sigma, S_0,  scheme="milstein"
+            N, M, T, r, sigma, S_0,  scheme="milstein"
         )
 
         terminal_prices = {
             "exact": paths_euler["S_exact"][:, -1],
-            "euler": paths_euler["S_euler_approx"][:, -1],
-            "milstein": paths_milstein["S_milstein_approx"][:, -1],
+            "euler": paths_euler["S_approx"][:, -1],
+            "milstein": paths_milstein["S_approx"][:, -1],
         }
 
         row = {"N": N, "bs_price": bs_price}
@@ -301,3 +302,6 @@ def mc_convergence(
         results.append(row)
 
     return results
+
+
+
