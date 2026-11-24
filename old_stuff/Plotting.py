@@ -483,7 +483,7 @@ def plot_convergence_matching_comparison(
         ax.set_ylabel("Terminal error")
 
     fig.suptitle(
-        "GBM convergence: effect of moment matching",
+        "GBM convergence",
         fontsize=15,
     )
 
