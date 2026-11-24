@@ -20,6 +20,7 @@ class SimulationResult:
     def M(self):
         return self.paths.shape[1] - 1
 
+
 def simulate(
         model,
         S_0,
