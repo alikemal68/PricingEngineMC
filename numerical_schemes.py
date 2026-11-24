@@ -17,3 +17,6 @@ def milstein_step(model, t, s, dt, dW):
         s + a * dt + b * dW
         + 0.5 * b * b_s * (dW**2 - dt)
     )
+
+def exact_step(model, t, s, dt, dW):
+    return model.exact_step(t, s, dt, dW)
