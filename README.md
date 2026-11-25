@@ -2,10 +2,10 @@
 
 This project implements a modular Python framework for pricing options using Monte Carlo simulation. 
 It grew out of reading chapter 9 of "Mathematical Modeling and Computation in Finance" by Oosterlee and Grzelak.
-See the notebook 01_MC_options_pricing.ipynb for basic functionalities. 
+See the notebook [`01_MC_options_pricing.ipynb`] for basic functionalities. 
 
-Option sensitivities, so called "greeks", can be estimated by the finite difference method (see 03_greeks.ipynb notebook).
-Importance sampling is also implemented for variance reduction (see 02_importance_samplin.ipynb notebook). 
+Option sensitivities, so called "greeks", can be estimated by the finite difference method (see [`03_greeks.ipynb`] notebook).
+Importance sampling is also implemented for variance reduction (see [`02_importance_samplin.ipynb`] notebook). 
 
 requirements
 - numpy
