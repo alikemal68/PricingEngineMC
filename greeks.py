@@ -61,29 +61,6 @@ def _common_normal_draws(
     return normal_draws
 
 
-def _greek_statistics(
-        samples,
-        greek_name,
-        method,
-        bump_size,
-        common_random_numbers=True,
-) -> GreekResult:
-    """Calculate statistics and construct a GreekResult."""
-
-    stats = sample_statistics(samples)
-
-    return GreekResult(
-        estimate=stats.estimate,
-        sample_variance=stats.sample_variance,
-        standard_error=stats.standard_error,
-        n_observations=stats.n_observations,
-        greek_name=greek_name,
-        method=method,
-        bump_size=bump_size,
-        common_random_numbers=common_random_numbers,
-    )
-
-
 # ============================================================
 # Central difference Delta
 # ============================================================
@@ -135,11 +112,18 @@ def central_diff_delta(
     # Individual Delta observations
     delta_samples = (samples_up - samples_down) / (2 * h)
 
-    return _greek_statistics(
-        samples=delta_samples,
+    # Statistical evaluation
+    stats = sample_statistics(delta_samples)
+
+    return GreekResult(
+        estimate=stats.estimate,
+        sample_variance=stats.sample_variance,
+        standard_error=stats.standard_error,
+        n_observations=stats.n_observations,
         greek_name="delta",
         method="central_difference",
         bump_size=h,
+        common_random_numbers=True,
     )
 
 
@@ -207,11 +191,18 @@ def central_diff_vega(
     # Individual Vega observations
     vega_samples = (samples_up - samples_down) / (2 * h)
 
-    return _greek_statistics(
-        samples=vega_samples,
+    # Statistical evaluation
+    stats = sample_statistics(vega_samples)
+
+    return GreekResult(
+        estimate=stats.estimate,
+        sample_variance=stats.sample_variance,
+        standard_error=stats.standard_error,
+        n_observations=stats.n_observations,
         greek_name="vega",
         method="central_difference",
         bump_size=h,
+        common_random_numbers=True,
     )
 
 
@@ -280,9 +271,16 @@ def central_diff_gamma(
         samples_up - 2 * samples_base + samples_down
     ) / h**2
 
-    return _greek_statistics(
-        samples=gamma_samples,
+    # Statistical evaluation
+    stats = sample_statistics(gamma_samples)
+
+    return GreekResult(
+        estimate=stats.estimate,
+        sample_variance=stats.sample_variance,
+        standard_error=stats.standard_error,
+        n_observations=stats.n_observations,
         greek_name="gamma",
         method="central_difference",
         bump_size=h,
+        common_random_numbers=True,
     )
