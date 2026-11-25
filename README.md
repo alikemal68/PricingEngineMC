@@ -1,17 +1,17 @@
 # Monte Carlo Option Pricing Engine
 
-This project implements a modular Python framework for pricing options using Monte Carlo simulation. 
-It grew out of reading chapter 9 of "Mathematical Modeling and Computation in Finance" by Oosterlee and Grzelak.
-See the notebook `01_MC_options_pricing.ipynb` for a minimal example and basic functionalities. 
+This project implements a modular Python framework for option pricing using Monte Carlo simulation. It grew out of reading Chapter 9 of "Mathematical Modeling and Computation in Finance" by Oosterlee and Grzelak. See `01_MC_options_pricing.ipynb` for a minimal example illustrating the framework's basic functionality.
 
 Option sensitivities, so called "greeks", can be estimated by the finite difference method (see `03_greeks.ipynb` notebook).
 Importance sampling is also implemented for variance reduction (see `02_importance_sampling.ipynb` notebook). 
+
 
 ## Requirements
 - numpy
 - scipy
 - matplotlib
 - jupyter
+  
 
 ## File structure
 ```text
