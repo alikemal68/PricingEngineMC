@@ -7,9 +7,9 @@ from estimators import sample_statistics, PricingResult
 
 def discounted_payoff_samples(
         model,
-        product,
+        option_contract,
         scheme,
-        S_0,
+        S,
         N,
         times,
         rng=None,
@@ -24,7 +24,20 @@ def discounted_payoff_samples(
     if times.ndim != 1 or len(times) < 2:
         raise ValueError("Invalid time grid.")
 
-    if not np.isclose(times[-1], product.maturity):
+    if not np.all(np.isfinite(times)):
+        raise ValueError("Time grid must contain finite values.")
+
+    if np.any(np.diff(times) <= 0):
+        raise ValueError("Time grid must be strictly increasing.")
+
+    t = times[0]
+    T = option_contract.maturity
+    tau = T - t
+
+    if t < 0 or tau <= 0:
+        raise ValueError("Valuation time must satisfy 0 <= t < T.")
+
+    if not np.isclose(times[-1], T):
         raise ValueError(
             "The time grid must end at the option maturity."
         )
@@ -55,22 +68,20 @@ def discounted_payoff_samples(
     # 3. Simulate paths
     result = simulate(
         model=model,
-        S_0=S_0,
+        S=S,
         times=times,
         normal_draws=normal_draws,
         scheme=scheme,
     )
 
     # 4. Evaluate payoff
-    payoffs = product.payoff(
+    payoffs = option_contract.payoff(
         result.paths,
         result.times,
     )
 
     # 5. Discount payoffs
-    discount_factor = np.exp(
-        -model.r * product.maturity
-    )
+    discount_factor = np.exp(-model.r * tau)
 
     samples = discount_factor * payoffs
 
@@ -91,9 +102,9 @@ def discounted_payoff_samples(
 
 def price_option(
         model,
-        product,
+        option_contract,
         scheme,
-        S_0,
+        S,
         N,
         times,
         rng=None,
@@ -105,9 +116,9 @@ def price_option(
     # 1. Generate Monte Carlo contributions
     samples = discounted_payoff_samples(
         model=model,
-        product=product,
+        option_contract=option_contract,
         scheme=scheme,
-        S_0=S_0,
+        S=S,
         N=N,
         times=times,
         rng=rng,

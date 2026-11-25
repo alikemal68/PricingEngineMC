@@ -49,9 +49,9 @@ def constant_drift_shift(
     """Distribute a terminal Gaussian shift over the grid."""
 
     dt = np.diff(times)
-    T = times[-1] - times[0]
+    tau = times[-1] - times[0]
 
-    shifts = theta * np.sqrt(dt / T)
+    shifts = theta * np.sqrt(dt / tau)
 
     return gaussian_shift(
         normal_draws=normal_draws,

@@ -58,32 +58,3 @@ def sample_statistics(observations) -> EstimationResult:
         standard_error=standard_error,
         n_observations=n,
     )
-
-
-# Temporary wrapper for backward compatibility
-# def mc_estimator(
-#         payoff,
-#         discount_factor,
-#         weights=None,
-# ) -> PricingResult:
-
-#     samples = discount_factor * np.asarray(payoff, dtype=float)
-
-#     # Importance sampling correction
-#     if weights is not None:
-#         weights = np.asarray(weights, dtype=float)
-
-#         if weights.shape != samples.shape:
-#             raise ValueError("Weights must match the payoff shape.")
-
-#         samples = samples * weights
-
-#     # Statistical evaluation
-#     stats = sample_statistics(samples)
-
-#     return PricingResult(
-#         estimate=stats.estimate,
-#         sample_variance=stats.sample_variance,
-#         standard_error=stats.standard_error,
-#         n_observations=stats.n_observations,
-#     )

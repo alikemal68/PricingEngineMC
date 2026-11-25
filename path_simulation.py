@@ -23,7 +23,7 @@ class SimulationResult:
 
 def simulate(
         model,
-        S_0,
+        S,
         times,
         normal_draws,
         scheme,
@@ -44,7 +44,7 @@ def simulate(
 
     # Initialize paths
     paths = np.empty((N, M + 1))
-    paths[:, 0] = S_0
+    paths[:, 0] = S
 
     # Loop over time steps
     for i in range(M):

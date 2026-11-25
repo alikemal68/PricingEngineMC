@@ -7,8 +7,9 @@ from option_contracts import EuropeanCall, EuropeanPut
 
 def gbm_strike_shift(
         model,
-        product,
-        S_0,
+        option_contract,
+        S,
+        t=0.0,
 ):
     """Strike-based importance sampling shift for GBM."""
 
@@ -18,19 +19,27 @@ def gbm_strike_shift(
     r = model.r
     sigma = model.sigma
 
-    K = product.strike
-    T = product.maturity
+    K = option_contract.strike
+    T = option_contract.maturity
+
+    tau = T - t
+
+    if t < 0 or tau <= 0:
+        raise ValueError("Valuation time must satisfy 0 <= t < T.")
+
+    if S <= 0 or K <= 0 or sigma <= 0:
+        raise ValueError("Spot, strike and volatility must be positive.")
 
     z_K = (
-        np.log(K / S_0)
-        - (r - 0.5 * sigma**2) * T
-    ) / (sigma * np.sqrt(T))
+        np.log(K / S)
+        - (r - 0.5 * sigma**2) * tau
+    ) / (sigma * np.sqrt(tau))
 
-    if isinstance(product, EuropeanCall):
+    if isinstance(option_contract, EuropeanCall):
         return max(z_K, 0.0)
 
-    elif isinstance(product, EuropeanPut):
+    elif isinstance(option_contract, EuropeanPut):
         return min(z_K, 0.0)
 
     else:
-        raise TypeError("Unsupported product type.")
+        raise TypeError("Unsupported option type.")
