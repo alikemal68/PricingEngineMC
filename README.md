@@ -13,7 +13,7 @@ requirements
 - matplotlib
 - jupyter
 
-
+```text
 PricingEngineMC/
 │
 ├── stoch_models.py            # Stochastic model definitions
