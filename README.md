@@ -1,4 +1,4 @@
-Monte Carlo Option Pricing Engine
+# Monte Carlo Option Pricing Engine
 
 This project implements a modular Python framework for pricing options using Monte Carlo simulation. 
 It grew out of reading chapter 9 of "Mathematical Modeling and Computation in Finance" by Oosterlee and Grzelak.
