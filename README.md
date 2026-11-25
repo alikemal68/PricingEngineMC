@@ -19,15 +19,15 @@ PricingEngineMC/
 │
 ├── stoch_models.py            # Stochastic model definitions
 ├── numerical_schemes.py       # Euler, Milstein and exact schemes
-├── path_simulation.py         # Generic path simulation
+├── path_simulation.py         # generates paths 
 ├── option_contracts.py        # Financial instruments and payoffs
 ├── estimators.py              # Statistical estimation
 ├── pricing_engine.py          # Monte Carlo pricing framework
 ├── greeks.py                  # Numerical Greek estimation
 |
-├── analytical_results.py      # Black-Scholes prices and Greeks
+├── analytical_results.py      # analytical Black-Scholes prices and Greeks
 ├── randomness.py              # Random number transformations
-├── importance_sampling.py    # Importance sampling strategies
+├── importance_sampling.py     # Importance sampling strategies
 │
 └── notebooks/
    ├── 01_MC_options_pricing.ipynb
