@@ -13,7 +13,7 @@ Importance sampling is also implemented for variance reduction (see `02_importan
 - matplotlib
 - jupyter
 
-## File structue
+## File structure
 ```text
 PricingEngineMC/
 │
