@@ -2,7 +2,7 @@
 import numpy as np
 
 from stoch_models import GBM
-from payoff import EuropeanCall, EuropeanPut
+from option_contracts import EuropeanCall, EuropeanPut
 
 
 def gbm_strike_shift(

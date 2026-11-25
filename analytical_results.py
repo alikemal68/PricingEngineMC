@@ -2,7 +2,7 @@
 import numpy as np
 import scipy.stats as st
 
-from payoff import EuropeanCall, EuropeanPut
+from option_contracts import EuropeanCall, EuropeanPut
 from stoch_models import GBM
 
 

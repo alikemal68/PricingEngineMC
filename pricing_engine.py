@@ -5,6 +5,9 @@ import numpy as np
 from path_simulation import simulate
 from estimators import mc_estimator
 
+# NOTES TO MYSELF
+# We have implemented importance sampling but we need to incorparate it into our pricing engine here! 
+
 
 def price_option(
         model,

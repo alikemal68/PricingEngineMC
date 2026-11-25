@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt 
 import scipy.stats as st
 
-import MonteCarloPricing
+import old_stuff.MonteCarloPricing as MonteCarloPricing
 
 
 def weak_and_strong_convergence(
