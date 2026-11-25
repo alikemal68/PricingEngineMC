@@ -5,7 +5,7 @@ It grew out of reading chapter 9 of "Mathematical Modeling and Computation in Fi
 See the notebook `01_MC_options_pricing.ipynb` for a minimal example and basic functionalities. 
 
 Option sensitivities, so called "greeks", can be estimated by the finite difference method (see `03_greeks.ipynb` notebook).
-Importance sampling is also implemented for variance reduction (see `02_importance_samplin.ipynb` notebook). 
+Importance sampling is also implemented for variance reduction (see `02_importance_sampling.ipynb` notebook). 
 
 ## Requirements
 - numpy
