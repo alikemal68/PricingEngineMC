@@ -7,12 +7,13 @@ See the notebook [`01_MC_options_pricing.ipynb`] for basic functionalities.
 Option sensitivities, so called "greeks", can be estimated by the finite difference method (see [`03_greeks.ipynb`] notebook).
 Importance sampling is also implemented for variance reduction (see [`02_importance_samplin.ipynb`] notebook). 
 
-requirements
+## Requirements
 - numpy
 - scipy
 - matplotlib
 - jupyter
 
+## File structue
 ```text
 PricingEngineMC/
 │
