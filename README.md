@@ -31,5 +31,5 @@ PricingEngineMC/
 │
 └── notebooks/
    ├── 01_MC_options_pricing.ipynb
-   ├── 02_importance_samplin.ipynb
+   ├── 02_importance_sampling.ipynb
    └── 03_greeks.ipynb
